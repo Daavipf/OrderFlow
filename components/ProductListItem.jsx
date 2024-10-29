@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import React, { useContext } from "react";
+import { Link } from "expo-router";
 
-export default function ListItem({ item, handleDelete }) {
+export default function ProductListItem({ item, handleDelete }) {
   return (
     <View style={styles.productItem}>
       <Text style={styles.productName}>{item.productName}</Text>
@@ -10,6 +11,9 @@ export default function ListItem({ item, handleDelete }) {
       <Pressable onPress={handleDelete}>
         <Text>Deletar</Text>
       </Pressable>
+      <Link href={`/update/product/${item.ID}`}>
+        <Text>Editar</Text>
+      </Link>
     </View>
   );
 }

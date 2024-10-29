@@ -1,62 +1,70 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Button,
-  FlatList,
-} from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { StyleSheet, Text, View, FlatList, Pressable } from "react-native";
+import React, { useContext, useState, useEffect } from "react";
 import { AppContext } from "../../context/AppContext";
+import { useIsFocused } from "@react-navigation/native";
+import ProductListItem from "../../components/ProductListItem";
+import { Link } from "expo-router";
 
 export default function Products() {
-  const { storeItem } = useContext(AppContext);
-  const { control, handleSubmit } = useForm();
-  const onSubmit = async (data) => {
-    await storeItem("Products", data);
-  };
+  const { getItems, deleteItem } = useContext(AppContext);
+  const [products, setProducts] = useState([]);
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await getItems("Products");
+      setProducts(data);
+    }
+
+    if (isFocused) {
+      fetchData();
+    }
+  }, [getItems, isFocused]);
+
+  async function handleDeleteItem(item) {
+    //console.log(item);
+    const data = await deleteItem("Products", item.ID);
+    setProducts(data);
+    alert("Produto Removido");
+  }
 
   return (
     <View>
-      <Text>Cadastrar Produtos</Text>
-      <Controller
-        control={control}
-        rules={{ required: true }}
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            placeholder="Nome do produto"
-            onChangeText={onChange}
-            value={value}
+      <Link href="/InsertProducts">
+        <Text>Cadastrar +</Text>
+      </Link>
+      <Text>Produtos:</Text>
+      <FlatList
+        data={products}
+        renderItem={({ item }) => (
+          <ProductListItem
+            item={item}
+            handleDelete={() => handleDeleteItem(item)}
           />
         )}
-        name="productName"
+        ListEmptyComponent={<Text>Nenhum produto cadastrado.</Text>}
       />
-      <Controller
-        control={control}
-        rules={{ required: true }}
-        render={({ field: { onChange, value } }) => (
-          <TextInput
-            placeholder="Preço"
-            onChangeText={onChange}
-            value={value}
-          />
-        )}
-        name="productPrice"
-      />
-      <Button title="Cadastrar" onPress={handleSubmit(onSubmit)} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  item: {
-    backgroundColor: "#f9c2ff",
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
   title: {
-    fontSize: 32,
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 16,
+  },
+  productItem: {
+    padding: 12,
+    backgroundColor: "#f8f8f8",
+    marginVertical: 8,
+    borderRadius: 6,
+  },
+  productName: {
+    fontSize: 18,
+  },
+  productPrice: {
+    fontSize: 16,
+    color: "gray",
   },
 });

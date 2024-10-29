@@ -12,6 +12,19 @@ export default function useStorage() {
     }
   }
 
+  async function getItem(key, itemID) {
+    try {
+      let items = await getItems(key);
+      let singleItem = items.find((item) => {
+        return item.ID === itemID;
+      });
+      return singleItem;
+    } catch (error) {
+      console.error("Erro ao resgatar produto: ", error);
+      return undefined;
+    }
+  }
+
   async function storeItem(key, data) {
     data["ID"] = generateId();
     try {
@@ -38,9 +51,23 @@ export default function useStorage() {
     }
   }
 
+  async function updateItem(key, data) {
+    try {
+      const updatedList = await deleteItem(key, data.ID);
+      updatedList.push(data);
+      await AsyncStorage.setItem(key, JSON.stringify(updatedList));
+      return updatedList;
+    } catch (error) {
+      console.error("Erro ao atualizar produto: ", error);
+      return [];
+    }
+  }
+
   return {
     storeItem,
     getItems,
     deleteItem,
+    updateItem,
+    getItem,
   };
 }
