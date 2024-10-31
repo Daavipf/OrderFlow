@@ -53,13 +53,17 @@ export default function useStorage() {
 
   async function updateItem(key, data) {
     try {
-      const updatedList = await deleteItem(key, data.ID);
-      updatedList.push(data);
-      await AsyncStorage.setItem(key, JSON.stringify(updatedList));
-      return updatedList;
+      let items = await getItems(key);
+      let itemIndex = items.findIndex((item) => item.ID === data.ID);
+      if (itemIndex !== -1) {
+        items[itemIndex] = { ...items[itemIndex], ...data };
+        await AsyncStorage.setItem(key, JSON.stringify(items));
+        console.log("Produto atualizado");
+      } else {
+        console.error("Erro ao atualizar produto: Produto não encontrado");
+      }
     } catch (error) {
       console.error("Erro ao atualizar produto: ", error);
-      return [];
     }
   }
 

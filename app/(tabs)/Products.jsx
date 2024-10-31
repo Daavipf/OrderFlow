@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, FlatList, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Pressable,
+  Button,
+} from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import { AppContext } from "../../context/AppContext";
 import { useIsFocused } from "@react-navigation/native";
@@ -29,11 +36,13 @@ export default function Products() {
   }
 
   return (
-    <View>
-      <Link href="/InsertProducts">
-        <Text>Cadastrar +</Text>
+    <View style={styles.container}>
+      <Link href="/InsertProducts" asChild>
+        <Pressable style={styles.addButton}>
+          <Text style={styles.text}>Adicionar +</Text>
+        </Pressable>
       </Link>
-      <Text>Produtos:</Text>
+      <Text>Todos Cadastrados:</Text>
       <FlatList
         data={products}
         renderItem={({ item }) => (
@@ -49,6 +58,10 @@ export default function Products() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
   title: {
     fontSize: 24,
     fontWeight: "bold",
@@ -66,5 +79,15 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 16,
     color: "gray",
+  },
+  addButton: {
+    alignSelf: "flex-end",
+    backgroundColor: "#0891b2",
+    paddingVertical: 16,
+    paddingHorizontal: 48,
+    borderRadius: 8,
+  },
+  text: {
+    color: "#FFF",
   },
 });

@@ -29,11 +29,13 @@ export default function Customers() {
   }
 
   return (
-    <View>
-      <Link href="/InsertCustomers">
-        <Text>Cadastrar +</Text>
+    <View style={styles.container}>
+      <Link href="/InsertCustomers" asChild>
+        <Pressable style={styles.addButton}>
+          <Text style={styles.text}>Adicionar +</Text>
+        </Pressable>
       </Link>
-      <Text>Clientes:</Text>
+      <Text>Todos Cadastrados:</Text>
       <FlatList
         data={customers}
         renderItem={({ item }) => (
@@ -66,5 +68,19 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 16,
     color: "gray",
+  },
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  addButton: {
+    alignSelf: "flex-end",
+    backgroundColor: "#0891b2",
+    paddingVertical: 16,
+    paddingHorizontal: 48,
+    borderRadius: 8,
+  },
+  text: {
+    color: "#FFF",
   },
 });
